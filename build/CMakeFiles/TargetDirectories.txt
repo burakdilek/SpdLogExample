@@ -1,0 +1,3 @@
+/workspaces/SpdLogExample/build/CMakeFiles/spdlog_xml_example.dir
+/workspaces/SpdLogExample/build/CMakeFiles/edit_cache.dir
+/workspaces/SpdLogExample/build/CMakeFiles/rebuild_cache.dir

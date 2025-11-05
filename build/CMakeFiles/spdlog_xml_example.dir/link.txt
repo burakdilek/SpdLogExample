@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/spdlog_xml_example.dir/main.cpp.o -o spdlog_xml_example   -L/workspaces/SpdLogExample/lib  -Wl,-rpath,/workspaces/SpdLogExample/lib -lspdlog -ltinyxml2 
