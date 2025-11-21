@@ -11,7 +11,7 @@ Kullanıcı tarafında görünen API: `logger` namespace'i ve `logger.h` header'
 - Log dosyası adı:
   - Varsayılan: `hexagon.log` ( `logger::init()` parametresiz çağrılırsa )
   - Veya: `<app_name>.log` ( `logger::init("app_name")` çağrılırsa )
-- İnternetsiz/offline çalışır; ihtiyacın olan her şey bu repoda.
+Bu kütüphaneyi kullanmak için ihtiyacın olan her şey bu repoda yer alır.
 
 ## Proje Yapısı (özet)
 
@@ -75,9 +75,9 @@ LD_LIBRARY_PATH=build ./build/test_app
 
 Çalışma dizininde `test_app.log` dosyası oluşur. Log seviyesi `config.xml`'deki `<LogLevel>` değerine göre filtrelenir.
 
-## Kendi Uygulamalarında Kullanım (Offline Senaryo)
+## Kendi Uygulamalarında Kullanım
 
-İnternetsiz çalışan kendi uygulamanda bu kütüphaneyi kullanmak için şu adımları izle:
+Kendi uygulamanda bu kütüphaneyi kullanmak için şu adımları izle:
 
 1. Bu repodan şu dosyaları kendi projenine kopyala:
    - `build/liblogger.so`
@@ -120,16 +120,16 @@ LD_LIBRARY_PATH=build ./build/test_app
 
    ```cmake
    cmake_minimum_required(VERSION 3.10)
-   project(MyOfflineApp)
+  project(MyApp)
 
    set(CMAKE_CXX_STANDARD 17)
 
    include_directories(${CMAKE_SOURCE_DIR}/include)
    link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-   add_executable(my_offline_app src/main.cpp)
+  add_executable(my_app src/main.cpp)
 
-   target_link_libraries(my_offline_app
+  target_link_libraries(my_app
        PRIVATE
            logger
    )
@@ -142,7 +142,7 @@ LD_LIBRARY_PATH=build ./build/test_app
    cmake -B build
    cmake --build build
 
-   LD_LIBRARY_PATH=lib ./build/my_offline_app
+  LD_LIBRARY_PATH=lib ./build/my_app
    ```
 
 ## Log Seviyesini XML'den Değiştirme

@@ -74,9 +74,9 @@ LD_LIBRARY_PATH=build ./build/test_app
 
 This creates `test_app.log` in the working directory. The log level is filtered according to the `<LogLevel>` value in `config.xml`.
 
-## Using the Library in Your Own (Offline) Application
+## Using the Library in Your Own Application
 
-To use this logger library in an offline application:
+To use this logger library in your own application:
 
 1. Copy the following files from this repo into your project:
    - `build/liblogger.so`
@@ -119,16 +119,16 @@ To use this logger library in an offline application:
 
    ```cmake
    cmake_minimum_required(VERSION 3.10)
-   project(MyOfflineApp)
+  project(MyApp)
 
    set(CMAKE_CXX_STANDARD 17)
 
    include_directories(${CMAKE_SOURCE_DIR}/include)
    link_directories(${CMAKE_SOURCE_DIR}/lib)
 
-   add_executable(my_offline_app src/main.cpp)
+  add_executable(my_app src/main.cpp)
 
-   target_link_libraries(my_offline_app
+  target_link_libraries(my_app
        PRIVATE
            logger
    )
@@ -137,11 +137,11 @@ To use this logger library in an offline application:
    Build and run:
 
    ```bash
-   cd my_app
+  cd my_app
    cmake -B build
    cmake --build build
 
-   LD_LIBRARY_PATH=lib ./build/my_offline_app
+  LD_LIBRARY_PATH=lib ./build/my_app
    ```
 
 ## Changing Log Level via XML
