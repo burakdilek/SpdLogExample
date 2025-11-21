@@ -1,58 +1,152 @@
-# SpdLogExample
+# SpdLogExample / Logger Library
 
-This project demonstrates using the C++ spdlog and TinyXML2 libraries in a fully offline, self-contained way.
+This project provides a logger library built on top of `spdlog` and `tinyxml2`. 
+It reads the log level from an XML file and exposes a simple C++ API through a shared library (`.so`).
+
+Library binary name: `liblogger.so`  
+Public API: `logger` namespace via the `logger.h` header.
 
 ## Features
-- Log level is read from `config.xml` and can be changed at runtime
-- Logs are written to `mylog.txt`
-- Project runs offline using bundled `.so` and header files in the `lib/` directory
-- Compiled and tested with GCC 8.5
+- Log level is read from `config.xml` (`<LogLevel>` element).
+- When `config.xml` changes, the log level is updated at runtime.
+- Log file name:
+  - Default: `hexagon.log` (if `logger::init()` is called without parameters)
+  - Or: `<app_name>.log` (if `logger::init("app_name")` is used)
+- Fully offline: all required sources and headers are in this repo.
 
-## Project Structure
+## Project Structure (overview)
 
-```
+```text
 SpdLogExample/
-├── main.cpp              # Application entry point
+├── CMakeLists.txt        # CMake configuration
 ├── config.xml            # Log level configuration file
-├── CMakeLists.txt        # CMake build configuration
-├── lib/                  # Bundled libraries
-│   ├── libtinyxml2.so    # TinyXML2 shared library
-│   ├── libspdlog.so.*    # Spdlog shared libraries (optional for header-only usage)
-│   ├── spdlog/           # Spdlog header files
-│   └── tinyxml2.h        # TinyXML2 header file
-└── build/                # Build output directory
+├── logger.h              # Public header to include in user code
+├── spdlog_xml_lib.h      # Internal implementation header (included by logger.h)
+├── spdlog_xml_lib.cpp    # Logger library implementation
+├── test_app.cpp          # Example application using the library
+└── build/                # CMake build outputs (liblogger.so, test_app, ...)
 ```
 
-## Build and Run
+## Build
 
-### 1. Building the Project
+To build the project:
 
 ```bash
-# Create build directory and configure with cmake
-mkdir -p build && cd build
-cmake ..
-make
-
-# Or with a single command:
-cmake -B build && cmake --build build
+cd /workspaces/SpdLogExample   # or your clone path
+cmake -B build
+cmake --build build
 ```
 
-### 2. Running the Application
+This produces:
+
+- Library: `build/liblogger.so`
+- Example application: `build/test_app`
+
+## Example Usage (test_app)
+
+`test_app.cpp` is a minimal example:
+
+```cpp
+#include "logger.h"
+
+int main() {
+    // Without app name: default hexagon.log
+    // logger::init();
+
+    // With explicit app name, controls log file name
+    logger::init("test_app");  // -> test_app.log
+
+    logger::info("Test application started");
+    logger::warn("Warning log");
+    logger::error("Error log");
+    logger::critical("Critical log");
+
+    return 0;
+}
+```
+
+Run:
 
 ```bash
-# From build directory:
-cd build
-./spdlog_xml_example
-
-# Or from project root:
-./build/spdlog_xml_example
+cd /workspaces/SpdLogExample
+LD_LIBRARY_PATH=build ./build/test_app
 ```
 
-**Note:** Thanks to RPATH settings, there's no need to define `LD_LIBRARY_PATH`. The application automatically finds `.so` files in the `lib/` directory.
+This creates `test_app.log` in the working directory. The log level is filtered according to the `<LogLevel>` value in `config.xml`.
 
-## Changing Log Level
+## Using the Library in Your Own (Offline) Application
 
-You can dynamically update the log level while the program is running by editing the `<LogLevel>` value in `config.xml`:
+To use this logger library in an offline application:
+
+1. Copy the following files from this repo into your project:
+   - `build/liblogger.so`
+   - `logger.h`
+   - `spdlog_xml_lib.h`
+   - `config.xml`
+
+2. Example project layout:
+
+   ```text
+   my_app/
+   ├── src/main.cpp
+   ├── include/logger.h
+   ├── include/spdlog_xml_lib.h
+   ├── lib/liblogger.so
+   └── config.xml
+   ```
+
+3. Use the library in `main.cpp`:
+
+   ```cpp
+   #include "logger.h"
+
+   int main() {
+       // Use default name (hexagon.log):
+       // logger::init();
+
+       // Or define an application-specific log file:
+       logger::init("my_app"); // -> my_app.log
+
+       logger::info("Application started");
+       logger::warn("Warning message");
+       logger::error("Error message");
+       logger::critical("Critical error");
+       return 0;
+   }
+   ```
+
+4. Integrate with CMake (recommended):
+
+   ```cmake
+   cmake_minimum_required(VERSION 3.10)
+   project(MyOfflineApp)
+
+   set(CMAKE_CXX_STANDARD 17)
+
+   include_directories(${CMAKE_SOURCE_DIR}/include)
+   link_directories(${CMAKE_SOURCE_DIR}/lib)
+
+   add_executable(my_offline_app src/main.cpp)
+
+   target_link_libraries(my_offline_app
+       PRIVATE
+           logger
+   )
+   ```
+
+   Build and run:
+
+   ```bash
+   cd my_app
+   cmake -B build
+   cmake --build build
+
+   LD_LIBRARY_PATH=lib ./build/my_offline_app
+   ```
+
+## Changing Log Level via XML
+
+In `config.xml`:
 
 ```xml
 <Config>
@@ -60,43 +154,28 @@ You can dynamically update the log level while the program is running by editing
 </Config>
 ```
 
-**Supported log levels:**
-- `trace`: Most detailed log level
-- `debug`: Debugging information
-- `info`: General informational messages (default)
-- `warn`: Warning messages
-- `error`: Error messages
-- `critical`: Critical error messages
+Supported log levels:
 
-The program checks config.xml every 2 seconds and automatically updates the log level if changed.
+- `trace`
+- `debug`
+- `info`  (default)
+- `warn`
+- `error`
+- `critical`
+
+On each logging call, the library re-reads `config.xml` and updates the logger level if it has changed.
 
 ## System Requirements
 
-- **Compiler:** GCC 8.5 or higher (C++17 support required)
-- **CMake:** 3.10 or higher
+- **Compiler:** GCC 8.5+ (C++17)
+- **CMake:** 3.10+
 - **Operating System:** Linux (tested on Ubuntu 24.04 LTS)
-- **Dependencies:** pthread (available as system library)
-
-## Deploying to Another System
-
-To deploy this project to another computer with GCC 8.5+:
-
-1. **Copy the entire project folder** (especially include the `lib/` directory)
-2. Follow the build steps above on the target system
-3. No additional library installation needed (all dependencies are in `lib/`)
-
-### Portability Notes
-
-- **libtinyxml2.so**: Included in `lib/` directory, automatically found via RPATH
-- **spdlog**: Used as header-only library, compiled into code during build
-- **pthread**: Comes standard with Linux systems
-- **Standard C++ libraries**: Included with GCC 8.5
+- **Dependencies:**
+  - `pthread` (system library)
 
 ## Libraries
 
-- **[spdlog](https://github.com/gabime/spdlog)** - Fast C++ logging library (v1.11.0)
-- **[TinyXML2](https://github.com/leethomason/tinyxml2)** - Lightweight XML parser
+- **spdlog** – Fast C++ logging library (embedded as headers in this project)
+- **TinyXML2** – Lightweight XML parser (source code included in this project)
 
-## License
-
-This project is for demonstration/educational purposes. The included libraries are subject to their own licenses.
+This project is subject to the licenses of these libraries.

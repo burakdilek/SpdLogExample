@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -shared -Wl,-soname,libspdlog_xml_lib.so -o libspdlog_xml_lib.so CMakeFiles/spdlog_xml_lib.dir/spdlog_xml_lib.cpp.o   -L/workspaces/SpdLogExample/lib  -Wl,-rpath,/workspaces/SpdLogExample/lib -lpthread -ltinyxml2 

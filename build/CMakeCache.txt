@@ -224,6 +224,12 @@ SpdLogExample_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 SpdLogExample_SOURCE_DIR:STATIC=/workspaces/SpdLogExample
 
+//Dependencies for the target
+logger_LIB_DEPENDS:STATIC=general;pthread;general;tinyxml2;
+
+//Dependencies for the target
+spdlog_xml_lib_LIB_DEPENDS:STATIC=general;pthread;general;tinyxml2;
+
 
 ########################
 # INTERNAL cache entries

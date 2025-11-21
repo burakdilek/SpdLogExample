@@ -117,41 +117,78 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named spdlog_xml_example
+# Target rules for targets named logger
 
 # Build rule for target.
-spdlog_xml_example: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 spdlog_xml_example
-.PHONY : spdlog_xml_example
+logger: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 logger
+.PHONY : logger
 
 # fast build rule for target.
-spdlog_xml_example/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spdlog_xml_example.dir/build.make CMakeFiles/spdlog_xml_example.dir/build
-.PHONY : spdlog_xml_example/fast
+logger/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/build
+.PHONY : logger/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+#=============================================================================
+# Target rules for targets named test_app
+
+# Build rule for target.
+test_app: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_app
+.PHONY : test_app
+
+# fast build rule for target.
+test_app/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_app.dir/build.make CMakeFiles/test_app.dir/build
+.PHONY : test_app/fast
+
+spdlog_xml_lib.o: spdlog_xml_lib.cpp.o
+.PHONY : spdlog_xml_lib.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spdlog_xml_example.dir/build.make CMakeFiles/spdlog_xml_example.dir/main.cpp.o
-.PHONY : main.cpp.o
+spdlog_xml_lib.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/spdlog_xml_lib.cpp.o
+.PHONY : spdlog_xml_lib.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+spdlog_xml_lib.i: spdlog_xml_lib.cpp.i
+.PHONY : spdlog_xml_lib.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spdlog_xml_example.dir/build.make CMakeFiles/spdlog_xml_example.dir/main.cpp.i
-.PHONY : main.cpp.i
+spdlog_xml_lib.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/spdlog_xml_lib.cpp.i
+.PHONY : spdlog_xml_lib.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+spdlog_xml_lib.s: spdlog_xml_lib.cpp.s
+.PHONY : spdlog_xml_lib.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/spdlog_xml_example.dir/build.make CMakeFiles/spdlog_xml_example.dir/main.cpp.s
-.PHONY : main.cpp.s
+spdlog_xml_lib.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/logger.dir/build.make CMakeFiles/logger.dir/spdlog_xml_lib.cpp.s
+.PHONY : spdlog_xml_lib.cpp.s
+
+test_app.o: test_app.cpp.o
+.PHONY : test_app.o
+
+# target to build an object file
+test_app.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_app.dir/build.make CMakeFiles/test_app.dir/test_app.cpp.o
+.PHONY : test_app.cpp.o
+
+test_app.i: test_app.cpp.i
+.PHONY : test_app.i
+
+# target to preprocess a source file
+test_app.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_app.dir/build.make CMakeFiles/test_app.dir/test_app.cpp.i
+.PHONY : test_app.cpp.i
+
+test_app.s: test_app.cpp.s
+.PHONY : test_app.s
+
+# target to generate assembly for a file
+test_app.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_app.dir/build.make CMakeFiles/test_app.dir/test_app.cpp.s
+.PHONY : test_app.cpp.s
 
 # Help Target
 help:
@@ -161,10 +198,14 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... spdlog_xml_example"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... logger"
+	@echo "... test_app"
+	@echo "... spdlog_xml_lib.o"
+	@echo "... spdlog_xml_lib.i"
+	@echo "... spdlog_xml_lib.s"
+	@echo "... test_app.o"
+	@echo "... test_app.i"
+	@echo "... test_app.s"
 .PHONY : help
 
 

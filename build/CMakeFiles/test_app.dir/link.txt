@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/test_app.dir/test_app.cpp.o -o test_app   -L/workspaces/SpdLogExample/lib  -Wl,-rpath,/workspaces/SpdLogExample/lib:/workspaces/SpdLogExample/build liblogger.so 
